@@ -2,7 +2,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
 'use strict';
 
-console.log('🚀 This is it.');
+console.log('🚀 This is it. - here we go');
 
 const MY_FAVORITE_BRANDS = [
   {
@@ -32,6 +32,9 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 🎯 TODO 1: The cheapest t-shirt
 // 0. I have 3 favorite brands stored in MY_FAVORITE_BRANDS variable
 // 1. Create a new variable and assign it the link of the cheapest t-shirt
+const CHEAPEST_TSHIRT='https://www.faguo-store.com/fr/vetements/7606-arcy-t-shirt-en-coton-recycle-kaki.html'
+
+console.log(CHEAPEST_TSHIRT)
 // I can find on these e-shops
 // 2. Log the variable
 
@@ -43,20 +46,44 @@ console.log(MY_FAVORITE_BRANDS[0]);
  * The variable is loaded by the file `data.js`
  * 👕
  */
-
+console.log(marketplace)
 // 🎯 TODO 2: Number of products
 // 1. Create a variable and assign it the number of products
 // 2. Log the variable
 
+console.log("Number of products: ");
+const NumberOfProducts = marketplace.length
+console.log(NumberOfProducts);
+
 // 🎯 TODO 3: Brands name
 // 1. Create a variable and assign it the list of brands name only
+const BRANDS_NAMES = []
+
+for (const product of marketplace){
+  BRANDS_NAMES.push(product.brand);
+}
+
+console.log(BRANDS_NAMES);
+
+var BRAND_UNIQUE = Array.from(new Set(BRANDS_NAMES));
+
 // 2. Log the variable
+console.log(BRAND_UNIQUE);
 // 3. Log how many brands we have
+
+console.log("nombre de marques :");
+console.log (BRAND_UNIQUE.length);
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the marketplace products by price
+
+
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
+const marketplaceSortPrice = marketplace.sort(function(a, b){
+  return a.price - b.price;
+});
+console.log(marketplaceSortPrice)
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
