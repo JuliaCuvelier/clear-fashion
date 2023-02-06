@@ -83,12 +83,28 @@ console.log (BRAND_UNIQUE.length);
 const marketplaceSortPrice = marketplace.sort(function(a, b){
   return a.price - b.price;
 });
+console.log("liste de produits du prix le plus bas au prix le plus haut : ")
 console.log(marketplaceSortPrice)
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
+
+// ne fonctionne pas
+
+
+function sortByDate(products) {
+  return products.sort(function(a, b) {
+    return new Date(b.released) - new Date(a.released);
+  });
+}
+
+const marketplaceSortDate = sortByDate(marketplace);
+
+console.log("liste des produits ordonnés par date : ")
+console.log(marketplaceSortDate);
+
 
 // 🎯 TODO 6: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
