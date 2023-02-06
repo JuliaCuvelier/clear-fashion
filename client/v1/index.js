@@ -206,6 +206,19 @@ for (const brand in brands) {
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
 
+
+
+const computeP90 = (brand) => {
+  const index = Math.floor(brand.length * 0.1);
+  return brand[index].price;
+};
+
+for (const brand in sortedBrands) {
+  const p90 = computeP90(sortedBrands[brand]);
+  console.log(`${brand} p90: ${p90}`);
+}
+
+
 /**
  * 🧥
  * Cool for your effort.
@@ -398,13 +411,38 @@ const COTELE_PARIS = [
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
 
+const twoWeeksAgo = new Date();
+twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+console.log(twoWeeksAgo);
+
+const newProducts = COTELE_PARIS.filter(product => {
+  const releaseDate = new Date(product.released);
+  return releaseDate >= twoWeeksAgo;
+  });
+  console.log(newProducts);
+
+
 // 🎯 TODO 2: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
 
+function reasonablePrice(shop){
+  for (let i =0; i<shop.length;i++){
+    if (shop[i].price>100){
+      return false;
+    }
+  }
+  return true;
+}
+console.log("Cotele est un magasin raisonnable ? ");
+console.log(reasonablePrice(COTELE_PARIS));
+
 // 🎯 TODO 3: Find a specific product
 // 1. Find the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
 // 2. Log the product
+
+console.log("produit avec l'uuid recherchée :")
+console.log(COTELE_PARIS.find(p => p.uuid === '2b9a47e3-ed73-52f6-8b91-379e9c8e526c'));
 
 // 🎯 TODO 4: Delete a specific product
 // 1. Delete the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
