@@ -152,13 +152,46 @@ console.log(averagePrice);
 // 2. Log the variable
 // 3. Log the number of products by brands
 
+
+const brands = {};
+
+for (let i = 0; i < marketplace.length; i++) {
+  const product = marketplace[i];
+  const brand = marketplace[i].brand;
+  if (!brands[brand]) {
+    brands[brand] = [];
+  }
+  brands[brand].push(product);
+}
+
+console.log("produits par marques : ")
+console.log(brands);
+
+
 // 🎯 TODO 9: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
 // 2. Log the sort
 
+console.log("produits par marques triés par prix décroissants  : ")
+
+for (const brand in brands) {
+  brands[brand].sort((a, b) => b.price - a.price);
+  console.log(`${brand}:`);
+  console.log(brands[brand]);
+}
+
+
 // 🎯 TODO 10: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
+
+
+console.log("produits par marques et par dates du plus ancien au plus récent :")
+for (const brand in brands) {
+  brands[brand].sort((a, b) => new Date(a.released) - new Date (b.released));
+  console.log(`${brand}:`);
+  console.log(brands[brand]);
+}
 
 /**
  * 💶
