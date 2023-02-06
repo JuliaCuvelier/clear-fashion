@@ -80,11 +80,10 @@ console.log (BRAND_UNIQUE.length);
 
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
-const marketplaceSortPrice = marketplace.sort(function(a, b){
-  return a.price - b.price;
-});
+const sortedProductsPrice = [...marketplace].sort((a, b) => a.price - b.price);
+
 console.log("liste de produits du prix le plus bas au prix le plus haut : ")
-console.log(marketplaceSortPrice)
+console.log(sortedProductsPrice)
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
@@ -174,10 +173,12 @@ console.log(brands);
 
 console.log("produits par marques triés par prix décroissants  : ")
 
+const sortedBrands = {};
+
 for (const brand in brands) {
-  brands[brand].sort((a, b) => b.price - a.price);
+  sortedBrands[brand] = [...brands[brand]].sort((a, b) => b.price - a.price);
   console.log(`${brand}:`);
-  console.log(brands[brand]);
+  console.log(sortedBrands[brand]);
 }
 
 
@@ -185,12 +186,13 @@ for (const brand in brands) {
 // 1. For each brand, sort the products by date, from old to recent
 // 2. Log the sort
 
+const sortedBrandsDate = {}
 
-console.log("produits par marques et par dates du plus ancien au plus récent :")
+console.log("produits par marques et par dates du plus ancien au plus récent : ")
 for (const brand in brands) {
-  brands[brand].sort((a, b) => new Date(a.released) - new Date (b.released));
+  sortedBrandsDate[brand] = [...brands[brand]].sort((a, b) => new Date(a.released) - new Date (b.released));
   console.log(`${brand}:`);
-  console.log(brands[brand]);
+  console.log(sortedBrandsDate[brand]);
 }
 
 /**
