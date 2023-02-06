@@ -110,9 +110,24 @@ console.log(marketplaceSortDate);
 // 1. Filter the list of products between 50€ and 100€
 // 2. Log the list
 
+const Products50to100 = marketplace.filter(marketplace => marketplace.price >= 50 && marketplace.price <= 100);
+console.log("Produits entre 50 et 100 euros")
+console.log(Products50to100);
+
+
 // 🎯 TODO 7: Average price
 // 1. Determine the average price of the marketplace
 // 2. Log the average
+
+let totalPrice = 0;
+for (let i = 0; i < marketplace.length; i++) {
+  totalPrice += marketplace[i].price;
+}
+
+const averagePrice = totalPrice / marketplace.length;
+
+console.log("prix moyen du marketplace : ")
+console.log(averagePrice);
 
 /**
  * 🏎
