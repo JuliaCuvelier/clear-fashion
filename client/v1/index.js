@@ -90,7 +90,6 @@ console.log(sortedProductsPrice)
 // 2. Create a variable and assign it the list of products by date from recent to old
 // 3. Log the variable
 
-// ne fonctionne pas
 
 
 function sortByDate(products) {
