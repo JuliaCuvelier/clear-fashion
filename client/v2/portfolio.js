@@ -27,6 +27,9 @@ const spanNbProducts = document.querySelector('#nbProducts');
 //brand
 const brandSelect = document.querySelector('#brand-select');
 
+const filterSelect = document.querySelector('#filter-select');
+
+
 /**
  * Set global value
  * @param {Array} result - products to display
@@ -44,7 +47,7 @@ const setCurrentProducts = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (page = 1, size = 12, brand="all") => {
+const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter") => {
   try {
 
     let url=`https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
@@ -57,7 +60,25 @@ const fetchProducts = async (page = 1, size = 12, brand="all") => {
       return {currentProducts, currentPagination};
     }
 
-    return body.data;
+    let {result,meta}=body.data;
+
+    if (filter==="By reasonable price"){
+        result=result.filter(product=>product.price<50);
+    }
+
+    if (filter==="By recently released"){
+      
+      
+      result=result.filter(product=>{
+        const timeDifference = new Date() - new Date(product.released);
+        const timeDifferenceInDays = timeDifference / (1000 * 60 * 60 * 24);
+        return timeDifferenceInDays < 14;
+      });
+    }
+    
+
+    return {result,meta};
+    
   } catch (error) {
     console.error(error);
     return {currentProducts, currentPagination};
@@ -65,7 +86,6 @@ const fetchProducts = async (page = 1, size = 12, brand="all") => {
 };
 
 /*recent product to do 3*/
-
 
 
 /**
@@ -148,7 +168,7 @@ renderBrands(brands);
  * Select the number of products to display
  */
 selectShow.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value),brandSelect.value);
+  const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value),brandSelect.value, filterSelect.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
@@ -156,7 +176,7 @@ selectShow.addEventListener('change', async (event) => {
 
 /* Select Page, Feature 1*/
 selectPage.addEventListener('change', async (event) => {
-  const products = await fetchProducts(parseInt(event.target.value), currentPagination.pageSize,brandSelect.value);
+  const products = await fetchProducts(parseInt(event.target.value), currentPagination.pageSize,brandSelect.value,filterSelect.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
@@ -171,9 +191,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /*selector brands*/
 
-
 brandSelect.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize, event.target.value);
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize, event.target.value, filterSelect.value);
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+
+filterSelect.addEventListener('change', async (event) => {
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize,brandSelect.value,event.target.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
