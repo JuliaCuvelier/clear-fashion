@@ -18,17 +18,25 @@ Search for available brands list
 let currentProducts = [];
 let currentPagination = {};
 let recentProducts=0;
+let nbNewProducts=0;
+let p50=0;
 
 // instantiate the selectors
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
-const spanNbProducts = document.querySelector('#nbProducts');
+
 //brand
 const brandSelect = document.querySelector('#brand-select');
-
+const SpanNbBrands = document.querySelector('#nbBrands');
+//filter
 const filterSelect = document.querySelector('#filter-select');
+const selectSort= document.querySelector('#sort-select');
 
+//indicators :
+const spanNbProducts = document.querySelector('#nbProducts');
+const spanNbNewProducts= document.querySelector('#nbNewProducts');
+const spanp50=document.querySelector('#p50');
 
 /**
  * Set global value
@@ -47,10 +55,10 @@ const setCurrentProducts = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter") => {
+const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter",sort="price-asc") => {
   try {
 
-    let url=`https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
+    let url=`https://clear-fashion-api.vercel.app?size=999`
     
     const response = await fetch(url+ (brand !== "all" ? `&brand=${brand}` : ""));
     const body = await response.json();
@@ -66,26 +74,56 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
         result=result.filter(product=>product.price<50);
     }
 
+    //to allow to count the number of new products later//
+     const  newProduct = result.filter(product=>{
+      const timeDifference = new Date() - new Date(product.released);
+      const timeDifferenceInDays = timeDifference / (1000 * 60 * 60 * 24);
+      return timeDifferenceInDays < 14;});
+
     if (filter==="By recently released"){
+           
+      result=newProduct
       
-      
-      result=result.filter(product=>{
-        const timeDifference = new Date() - new Date(product.released);
-        const timeDifferenceInDays = timeDifference / (1000 * 60 * 60 * 24);
-        return timeDifferenceInDays < 14;
-      });
     }
     
+    
+    nbNewProducts=newProduct.length;
 
+    meta={currentPage:page,
+    pageCount:Math.ceil(result.length/size),
+    pageSize:size,
+    count:result.length}
+
+      //To do 5//
+    if (sort==="price-asc")
+    {
+      result= [...result].sort((a, b) => a.price - b.price);
+    }
+    if (sort==="price-desc")
+    {
+      result= [...result].sort((a, b) => b.price - a.price);
+    }
+
+    //To do 6 //
+    if (sort=="date-asc")
+    {
+      result= [...result].sort((a,b) => new Date(b.released)-new Date(a.released));
+    }
+
+    if (sort=="date-desc")
+    {
+      result= [...result].sort((a,b) => new Date(a.released)-new Date(b.released));
+    }
+    result=result.slice((page-1)*size,page*size);
     return {result,meta};
+
+    
     
   } catch (error) {
     console.error(error);
     return {currentProducts, currentPagination};
   }
 };
-
-/*recent product to do 3*/
 
 
 /**
@@ -102,6 +140,7 @@ const renderProducts = products => {
         <span>${product.brand}</span>
         <a href="${product.link}">${product.name}</a>
         <span>${product.price}</span>
+        <!-- <span>${product.released}</span> -->
       </div>
     `;
     })
@@ -136,6 +175,11 @@ const renderIndicators = pagination => {
   const {count} = pagination;
 
   spanNbProducts.innerHTML = count;
+  spanNbNewProducts.innerHTML=nbNewProducts;
+  SpanNbBrands.innerHTML=nbBrand;
+//à rajouter dans fetch product//
+  const index = Math.floor(product.length * 0.5);
+  spanp50.innerHTML= product[index].price;
 };
 
 const render = (products, pagination) => {
@@ -151,6 +195,7 @@ const render = (products, pagination) => {
 
 /* render brands selector*/
 const brands = ["all","coteleparis", "dedicated", "aatise", "adresse", "1083", "hast", "loom", "panafrica"];
+const nbBrand=brands.length -1;
 const renderBrands = brands => {
   const options = brands.map(brand => `<option value="${brand}">${brand}</option>`).join('');
 
@@ -176,7 +221,7 @@ selectShow.addEventListener('change', async (event) => {
 
 /* Select Page, Feature 1*/
 selectPage.addEventListener('change', async (event) => {
-  const products = await fetchProducts(parseInt(event.target.value), currentPagination.pageSize,brandSelect.value,filterSelect.value);
+  const products = await fetchProducts(parseInt(event.target.value), currentPagination.pageSize,brandSelect.value,filterSelect.value, selectSort.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
@@ -192,14 +237,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 /*selector brands*/
 
 brandSelect.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize, event.target.value, filterSelect.value);
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize, event.target.value, filterSelect.value, selectSort.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
 
+/*selector filter*/
 filterSelect.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize,brandSelect.value,event.target.value);
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize,brandSelect.value,event.target.value,selectSort.value);
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+
+/*selector sort*/
+selectSort.addEventListener('change', async (event) => {
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize,brandSelect.value,filterSelect.value,event.target.value);
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
