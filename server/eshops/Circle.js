@@ -22,8 +22,14 @@ const parse = data => {
           .text()
           .slice(1)
       );
+      const link = "https://shop.circlesportswear.com" + $(element)
+      .find('h3.h5 .full-unstyled-link')
+      .attr('href');
 
-      return {name, price};
+
+      const image = "https:" + $(element)
+      .find('img')[0].attribs['src']
+      return {name, price,link,image};
     })
     .get();
 };

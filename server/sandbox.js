@@ -4,39 +4,20 @@ const dedicatedbrand = require('./eshops/dedicatedbrand');
 const montlimart=require('./eshops/Montlimart');
 const cicrle= require('./eshops/Circle');
 
-const linkdedicated=[]
-const link = [  "https://shop.circlesportswear.com/collections/all", 
-"https://www.montlimart.com/99-vetements", 
-"https://www.montlimart.com/14-chaussures",
-"https://www.montlimart.com/15-accessoires",
-/*"https://www.dedicatedbrand.com/en/women/all-women",*/
-/*'https://www.dedicatedbrand.com/en/men/all-men',*/
-/*'https://www.dedicatedbrand.com/en/men/all-men#page=16',*/
-'https://www.dedicatedbrand.com/en/kids/t-shirts',
-'https://www.dedicatedbrand.com/en/kids/sweatshirts',
-'https://www.dedicatedbrand.com/en/kids/bottoms',
-'https://www.dedicatedbrand.com/en/kids/swimwear',
 
-]
-for (let i=0;i<17;i++){
-  linkdedicated.push(`https://www.dedicatedbrand.com/en/men/all-men#page=${i}`)
-}
+const link = ["dedicatedbrand",
+"https://shop.circlesportswear.com/collections/all",
+"montlimart"];
 
-for (let i=0;i<17;i++){
-  linkdedicated.push(`https://www.dedicatedbrand.com/en/women/all-women#page=${i}`)
-}
-
-const combinedLinks = link.concat(linkdedicated);
-console.log(combinedLinks);
 
 
 async function sandbox (eshop = undefined, number = -1) {
 
   if (eshop==undefined && number==-1){
     var allProducts = [];
-    for(var i = 0; i < combinedLinks.length; i++)
+    for(var i = 0; i < link.length; i++)
     {
-      allProducts.push(...await sandbox(combinedLinks[i], i));
+      allProducts.push(...await sandbox(link[i], i));
     }
 
     let data = JSON.stringify(allProducts);
@@ -48,16 +29,20 @@ async function sandbox (eshop = undefined, number = -1) {
     try {
 
       var products = "";
+
       if (eshop.includes("dedicatedbrand"))
       {
 
       console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
 
-      products = await dedicatedbrand.scrape(eshop);
+      products = await dedicatedbrand.getProducts();
       
       /*console.log(products);*/
       }
-
+      else if(eshop == 'montlimart'){
+        link.push(...await montlimart.getLinks());
+        return [];
+      }
       else if (eshop.includes("montlimart"))
       {
 
