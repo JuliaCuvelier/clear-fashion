@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-process-exit */
+const fs = require('fs');
 const dedicatedbrand = require('./eshops/dedicatedbrand');
 const montlimart=require('./eshops/Montlimart');
 const cicrle= require('./eshops/Circle');
@@ -8,51 +9,83 @@ const link = [  "https://shop.circlesportswear.com/collections/all",
 "https://www.montlimart.com/99-vetements", 
 "https://www.montlimart.com/14-chaussures",
 "https://www.montlimart.com/15-accessoires",
-"dedicatedbrand"//tout le site
+"https://www.dedicatedbrand.com/en/women/all-women",
+'https://www.dedicatedbrand.com/en/men/all-men',
+'https://www.dedicatedbrand.com/en/kids/t-shirts',
+'https://www.dedicatedbrand.com/en/kids/sweatshirts',
+'https://www.dedicatedbrand.com/en/kids/bottoms',
+'https://www.dedicatedbrand.com/en/kids/swimwear',
+
 ]
 
-async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
-  try {
+async function sandbox (eshop = undefined, number = -1) {
 
-    let products=[];
-    if (eshop.includes("dedicatedbrand"))
+  if (eshop==undefined && number==-1){
+    var allProducts = [];
+    for(var i = 0; i < link.length; i++)
     {
-
-    console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-
-     products = await dedicatedbrand.scrape(eshop);
-    
-    console.log(products);
+      allProducts.push(...await sandbox(link[i], i));
     }
 
-    if (eshop.includes("montlimart"))
-    {
-
-    console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-
-     products = await montlimart.scrape(eshop);
-    
-    console.log(products);
-    }
-
-    if (eshop.includes("circle"))
-    {
-
-    console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-
-     products = await cicrle.scrape(eshop);
-    
-    console.log(products);
-    }
-    console.log('done');
+    let data = JSON.stringify(allProducts);
+    fs.writeFileSync('products.json', data);
+    console.log("Products in the json file: " + allProducts.length);
     process.exit(0);
-    
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
   }
-}
+  else {
+    try {
 
+      var products = "";
+      if (eshop.includes("dedicatedbrand"))
+      {
+
+      console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+
+      products = await dedicatedbrand.scrape(eshop);
+      
+      /*console.log(products);*/
+      }
+
+      else if (eshop.includes("montlimart"))
+      {
+
+      console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+
+      products = await montlimart.scrape(eshop);
+      
+      /*console.log(products);*/
+      }
+
+      else if (eshop.includes("circle"))
+      {
+
+      console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+
+      products = await cicrle.scrape(eshop);
+      
+      /*console.log(products);*/
+      }
+      else
+      {
+        console.log('eshop not found');
+        process.exit(1);
+      }
+      console.log(products);
+      console.log('done ' + products.length + ' products found');
+      if(number == -1)
+      {
+        process.exit(0);
+      }
+      return products;
+      
+      
+    } catch (e) {
+      console.error(e);
+      process.exit(1);
+    }
+  }
+
+}
 const [,, eshop] = process.argv;
 
 sandbox(eshop);
