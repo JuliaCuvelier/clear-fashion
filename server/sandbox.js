@@ -4,27 +4,39 @@ const dedicatedbrand = require('./eshops/dedicatedbrand');
 const montlimart=require('./eshops/Montlimart');
 const cicrle= require('./eshops/Circle');
 
-
+const linkdedicated=[]
 const link = [  "https://shop.circlesportswear.com/collections/all", 
 "https://www.montlimart.com/99-vetements", 
 "https://www.montlimart.com/14-chaussures",
 "https://www.montlimart.com/15-accessoires",
-"https://www.dedicatedbrand.com/en/women/all-women",
-'https://www.dedicatedbrand.com/en/men/all-men',
+/*"https://www.dedicatedbrand.com/en/women/all-women",*/
+/*'https://www.dedicatedbrand.com/en/men/all-men',*/
+/*'https://www.dedicatedbrand.com/en/men/all-men#page=16',*/
 'https://www.dedicatedbrand.com/en/kids/t-shirts',
 'https://www.dedicatedbrand.com/en/kids/sweatshirts',
 'https://www.dedicatedbrand.com/en/kids/bottoms',
 'https://www.dedicatedbrand.com/en/kids/swimwear',
 
 ]
+for (let i=0;i<17;i++){
+  linkdedicated.push(`https://www.dedicatedbrand.com/en/men/all-men#page=${i}`)
+}
+
+for (let i=0;i<17;i++){
+  linkdedicated.push(`https://www.dedicatedbrand.com/en/women/all-women#page=${i}`)
+}
+
+const combinedLinks = link.concat(linkdedicated);
+console.log(combinedLinks);
+
 
 async function sandbox (eshop = undefined, number = -1) {
 
   if (eshop==undefined && number==-1){
     var allProducts = [];
-    for(var i = 0; i < link.length; i++)
+    for(var i = 0; i < combinedLinks.length; i++)
     {
-      allProducts.push(...await sandbox(link[i], i));
+      allProducts.push(...await sandbox(combinedLinks[i], i));
     }
 
     let data = JSON.stringify(allProducts);
