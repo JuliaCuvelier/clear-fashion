@@ -19,7 +19,11 @@ let currentProducts = [];
 let currentPagination = {};
 let recentProducts=0;
 let nbNewProducts=0;
-let p50=0;
+let p50 = 0;
+let p90 = 0;
+let p95 = 0;
+let lastReleasedDate = '2020-01-01';
+
 
 // instantiate the selectors
 const selectShow = document.querySelector('#show-select');
@@ -36,8 +40,10 @@ const selectSort= document.querySelector('#sort-select');
 //indicators :
 const spanNbProducts = document.querySelector('#nbProducts');
 const spanNbNewProducts= document.querySelector('#nbNewProducts');
-const spanp50=document.querySelector('#p50');
-
+const spanP50 = document.querySelector('#p50');
+const spanP90 = document.querySelector('#p90');
+const spanP95 = document.querySelector('#p95');
+const spanLastReleasedDate = document.querySelector('#lastReleasedDate');
 /**
  * Set global value
  * @param {Array} result - products to display
@@ -114,11 +120,19 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
     {
       result= [...result].sort((a,b) => new Date(a.released)-new Date(b.released));
     }
+    
+    if (result.length > 0) {
+      const products = [...result].sort((a, b) => a.price - b.price);
+      /*To do 10 and 11*/
+      p50 = products[Math.floor(products.length * .50)].price;
+      p90 = products[Math.floor(products.length * .90)].price;
+      p95 = products[Math.floor(products.length * .95)].price;
+      lastReleasedDate = [...result].sort((a, b) => new Date(b.released) - new Date(a.released))[0].released;
+    }
+    
     result=result.slice((page-1)*size,page*size);
     return {result,meta};
 
-    
-    
   } catch (error) {
     console.error(error);
     return {currentProducts, currentPagination};
@@ -138,7 +152,7 @@ const renderProducts = products => {
       return `
       <div class="product" id=${product.uuid}>
         <span>${product.brand}</span>
-        <a href="${product.link}">${product.name}</a>
+        <a target="_blank" href="${product.link}">${product.name}</a>  <! --to do 12 -->
         <span>${product.price}</span>
         <!-- <span>${product.released}</span> -->
       </div>
@@ -153,7 +167,7 @@ const renderProducts = products => {
 };
 
 /**
- * Render page selector
+ *  page selector
  * @param  {Object} pagination
  */
 const renderPagination = pagination => {
@@ -171,21 +185,24 @@ const renderPagination = pagination => {
  * Render page selector
  * @param  {Object} pagination
  */
-const renderIndicators = pagination => {
+const renderIndicators = (pagination,products) => {
   const {count} = pagination;
 
   spanNbProducts.innerHTML = count;
   spanNbNewProducts.innerHTML=nbNewProducts;
   SpanNbBrands.innerHTML=nbBrand;
-//à rajouter dans fetch product//
-  const index = Math.floor(product.length * 0.5);
-  spanp50.innerHTML= product[index].price;
+
+  spanP50.innerHTML = p50;
+  spanP90.innerHTML = p90;
+  spanP95.innerHTML = p95;
+
+  spanLastReleasedDate.innerHTML = lastReleasedDate;
 };
 
 const render = (products, pagination) => {
   renderProducts(products);
   renderPagination(pagination);
-  renderIndicators(pagination);
+  renderIndicators(pagination, products);
 
   
 };
@@ -258,3 +275,4 @@ selectSort.addEventListener('change', async (event) => {
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
+
