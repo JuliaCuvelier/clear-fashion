@@ -23,6 +23,8 @@ let p50 = 0;
 let p90 = 0;
 let p95 = 0;
 let lastReleasedDate = '2020-01-01';
+let setFavorite = new Set();
+let filterFavorite = "no";
 
 
 // instantiate the selectors
@@ -36,6 +38,7 @@ const SpanNbBrands = document.querySelector('#nbBrands');
 //filter
 const filterSelect = document.querySelector('#filter-select');
 const selectSort= document.querySelector('#sort-select');
+const selectFavorite = document.querySelector("#favorite-select");
 
 //indicators :
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -92,7 +95,10 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
       
     }
     
-    
+    if (filter==="By favorite")
+    {
+      body.data.result = body.data.result.filter(a => setFavorite.has(a._id) == true);
+    }
     nbNewProducts=newProduct.length;
 
     meta={currentPage:page,

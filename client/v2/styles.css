@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+
+@font-face {
+  font-family: "font-1";
+  src: url(./LuxuriousRoman-Regular.ttf);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "font-1";
+  text-align: center;
+  background: url(./background.jpg);
+  background-position: center top;
+  height: 100vh;
+  background-color: rgba(232, 243, 232, 0.836);
+}
+
+h1 {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 4rem;
+  color: rgb(29, 202, 188);
+  text-align: center;
+  font-family: 'Dongle', sans-serif;
+}
+
+h2 {
+  text-align: center;
+  font-family: "Helvetica", "Arial", sans-serif;
+  color: rgb(127, 230, 194);
+}
+
+p {
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+
+main {
+  color: rgb(209, 146, 28);
+  background: rgba(255, 255, 255, 0.384);
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px 16px;
+  border-radius: 10px;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-container label {
+  font-weight: bold;
+}
+
+.filter-container select {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: white;
+  background-color: #11458e;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.product-container a {
+  text-decoration: none;
+  color: #555;
+  background-color: #fff;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+  width: 250px;
+  height: 300px;
+  text-align: center;
+  position: relative;
+}
+
+.product-container a:hover {
+  background-color: #fafafa;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.product-container img {
+  max-width: 100%;
+  max-height: 60%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.product-container h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.product-container h4 {
+  margin-top: 5px;
+  margin-bottom: 0;
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #888;
+}
+
+.product6container p {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #999;
+  }
+  
+  .filter-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .filter-container label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+  }
+  
+  .filter-container select {
+    padding: 8px 10px;
+    font-size: 14px;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 150px;
+    background-color: white;
+  }
+  
+  .filter-container button {
+    background-color: #febf63;
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .filter-container button:hover {
+    background-color: #fca311;
+  }
+  
+  .pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination-container button {
+    background-color: #febf63;
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    margin: 0 5px;
+  }
+  
+  .pagination-container button:hover {
+    background-color: #fca311;
+  }
+  
+  .pagination-container button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  
