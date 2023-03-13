@@ -6,43 +6,48 @@ const cheerio = require('cheerio');
  * @param  {String} data - html response
  * @return {Array} products
  */
-const parse = data => {
+const parse = async (data) => {
   const $ = cheerio.load(data);
 
-  return $('.products-list__block')
-    .map(async(i, element) => {
+  const products = $('.products-list__block')
+    .map((i, element) => {
       const name = $(element)
         .find('.text-reset')
         .text()
         .trim()
         .replace(/\s/g, ' ');
+
       const price = parseInt(
         $(element)
           .find('.price')
           .text()
       );
+
       const link = $(element)
         .find('.product-miniature__thumb-link')
         .attr('href');
 
-      var image = "";
-      if($(element).find('video').length > 0) {
-        await fetch(link).then(async response => {
-          await response.text().then(async body => {
-            const $b = cheerio.load(body);
-            image = $b('img')[0].attribs['data-src'];
-          })
-        })
-      }
-      else {
-        image = $(element)
-          .find('.product-miniature__thumb img')[0].attribs['data-src'];
-      }
-      const brand='Montlimart';
-      return {name, price,link,image,brand};
+      const brand = 'Montlimart';
+
+      const image = $(element)
+        .find('.product-miniature__thumb img')
+        .attr('data-src');
+
+      return { name, price, link, image, brand };
     })
     .get();
-    
+
+  const promises = products.map(async (product) => {
+    if (product.image && product.image.includes('.mp4')) {
+      const response = await fetch(product.link);
+      const body = await response.text();
+      const $ = cheerio.load(body);
+      product.image = $('meta[property="og:image"]').attr('content');
+    }
+    return product;
+  });
+
+  return Promise.all(promises);
 };
 
 /**
