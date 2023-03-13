@@ -1,5 +1,3 @@
-
-
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
@@ -40,9 +38,11 @@ const parse = data => {
         image = $(element)
           .find('.product-miniature__thumb img')[0].attribs['data-src'];
       }
-      return {name, price,link,image};
+      const brand='Montlimart';
+      return {name, price,link,image,brand};
     })
     .get();
+    
 };
 
 /**

@@ -29,7 +29,9 @@ const parse = data => {
 
       const image = "https:" + $(element)
       .find('img')[0].attribs['src']
-      return {name, price,link,image};
+
+      const brand= 'Circle';
+      return {name, price,link,image, brand};
     })
     .get();
 };
@@ -39,9 +41,12 @@ const parse = data => {
  * @param  {[type]}  url
  * @return {Array|null}
  */
-module.exports.scrape = async url => {
+module.exports.scrape = async () => {
   try {
+
+    url = "https://shop.circlesportswear.com/collections/all"
     const response = await fetch(url);
+    
 
     if (response.ok) {
       const body = await response.text();

@@ -40,14 +40,15 @@ async function sandbox (eshop = undefined, number = -1) {
       /*console.log(products);*/
       }
       else if(eshop == 'montlimart'){
-        link.push(...await montlimart.getLinks());
-        return [];
+        const links = await montlimart.getLinks(); 
+        link.push(...links); 
+        return []; 
       }
       else if (eshop.includes("montlimart"))
       {
 
       console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-
+      
       products = await montlimart.scrape(eshop);
       
       /*console.log(products);*/
@@ -83,6 +84,8 @@ async function sandbox (eshop = undefined, number = -1) {
   }
 
 }
+
+
 const [,, eshop] = process.argv;
 
 sandbox(eshop);
