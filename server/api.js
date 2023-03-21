@@ -18,8 +18,6 @@ async function connect() {
   console.log("connection ok");
 }
 
-connect();
-
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
@@ -32,6 +30,7 @@ app.get('/', (req, res) => {
 
 app.get('/brands', async (req, res) => {
   try {
+    await connect();
     const collection = db.collection('products');
     const searchResult = await collection.distinct('brand');
     res.send({ result: searchResult });
@@ -47,7 +46,7 @@ app.get('/products/search', async (request, response) => {
     console.log('maxPrice:', maxPrice);
     console.log('numPerPage:', numPerPage);
 
-    // const client = await connect();
+    await connect();
     const collection = db.collection('products');
 
     let query = {};
@@ -73,6 +72,7 @@ app.get('/products/search', async (request, response) => {
 
 app.get('/products/:id', async (req, res) => {
   try {
+    await connect();
     const collection = db.collection('products');
 
     const productId = req.params.id;
