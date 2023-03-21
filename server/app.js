@@ -77,9 +77,9 @@ async function findProductsScrapedLessThanTwoWeeksAgo() {
 
 const products = JSON.parse(fs.readFileSync('products.json'));
 
-//insertProducts(products);
+insertProducts(products);
 //findProductsByBrand('Circle');
-findProductsByPrice(10);
+//findProductsByPrice(10);
 //findProductsSortedByPrice();
 //findProductsSortedByDate();
 //findProductsScrapedLessThanTwoWeeksAgo();

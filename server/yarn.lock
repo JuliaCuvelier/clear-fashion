@@ -1324,6 +1324,13 @@ minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
+mongo@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/mongo/-/mongo-0.1.0.tgz"
+  integrity sha512-2MPq+GCNKhah0V/g/HIQI/S1h6Ycd87KPuXAITkeXWT6wncvABFxOaXdzCKlRvLSQRUkDimllrRrhoHUTD8usg==
+  dependencies:
+    mongodb "*"
+
 mongodb-connection-string-url@^2.5.4:
   version "2.6.0"
   resolved "https://registry.npmjs.org/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz"
@@ -1332,7 +1339,7 @@ mongodb-connection-string-url@^2.5.4:
     "@types/whatwg-url" "^8.2.1"
     whatwg-url "^11.0.0"
 
-mongodb@^4.13.0:
+mongodb@*, mongodb@^4.13.0:
   version "4.13.0"
   resolved "https://registry.npmjs.org/mongodb/-/mongodb-4.13.0.tgz"
   integrity sha512-+taZ/bV8d1pYuHL4U+gSwkhmDrwkWbH1l4aah4YpmpscMwgFBkufIKxgP/G7m87/NUuQzc2Z75ZTI7ZOyqZLbw==
