@@ -72,8 +72,10 @@ module.exports.getProducts = async () => {
           const name = data['name'];
           const price = data['price']['priceAsNumber'];
           const brand = "Dedicated";
+
+          const date = new Date().toDateString();
           
-          return {image, link, name, price, brand};
+          return {image, link, name, price, brand, date};
         }
       );
     }

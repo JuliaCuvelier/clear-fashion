@@ -1,5 +1,3 @@
-
-
 // Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
 'use strict';
 
@@ -67,17 +65,17 @@ const setCurrentProducts = ({result, meta}) => {
 const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter",sort="price-asc") => {
   try {
 
-    let url=`https://clear-fashion-api.vercel.app?size=999`
+    let url=`https://server-two-pearl.vercel.app/products/search?limit=9999`
     
     const response = await fetch(url+ (brand !== "all" ? `&brand=${brand}` : ""));
     const body = await response.json();
 
-    if (body.success !== true) {
+    if (body.error) {
       console.error(body);
       return {currentProducts, currentPagination};
     }
 
-    let {result,meta}=body.data;
+    let {result}=body;
 
     if (filter==="By reasonable price"){
         result=result.filter(product=>product.price<50);
@@ -85,7 +83,7 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
 
     //to allow to count the number of new products later//
      const  newProduct = result.filter(product=>{
-      const timeDifference = new Date() - new Date(product.released);
+      const timeDifference = new Date() - new Date(product.date);
       const timeDifferenceInDays = timeDifference / (1000 * 60 * 60 * 24);
       return timeDifferenceInDays < 14;});
 
@@ -95,13 +93,9 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
       
     }
     
-    if (filter==="By favorite")
-    {
-      body.data.result = body.data.result.filter(a => setFavorite.has(a._id) == true);
-    }
-    nbNewProducts=newProduct.length;
+  
 
-    meta={currentPage:page,
+    const meta={currentPage:page,
     pageCount:Math.ceil(result.length/size),
     pageSize:size,
     count:result.length}
@@ -133,7 +127,7 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
       p50 = products[Math.floor(products.length * .50)].price;
       p90 = products[Math.floor(products.length * .90)].price;
       p95 = products[Math.floor(products.length * .95)].price;
-      lastReleasedDate = [...result].sort((a, b) => new Date(b.released) - new Date(a.released))[0].released;
+      lastReleasedDate = [...result].sort((a, b) => new Date(b.date) - new Date(a.date))[0].date;
     }
     
     result=result.slice((page-1)*size,page*size);
@@ -160,7 +154,7 @@ const renderProducts = products => {
         <span>${product.brand}</span>
         <a target="_blank" href="${product.link}">${product.name}</a>  <! --to do 12 -->
         <span>${product.price}</span>
-        <!-- <span>${product.released}</span> -->
+        <!-- <span>${product.date}</span> -->
       </div>
     `;
     })
@@ -217,7 +211,7 @@ const render = (products, pagination) => {
 
 
 /* render brands selector*/
-const brands = ["all","coteleparis", "dedicated", "aatise", "adresse", "1083", "hast", "loom", "panafrica"];
+const brands = ["all", "Dedicated", "Montlimart","Circle"];
 const nbBrand=brands.length -1;
 const renderBrands = brands => {
   const options = brands.map(brand => `<option value="${brand}">${brand}</option>`).join('');
@@ -281,4 +275,3 @@ selectSort.addEventListener('change', async (event) => {
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
-

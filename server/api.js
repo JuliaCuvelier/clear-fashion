@@ -60,9 +60,9 @@ app.get('/products/search', async (request, response) => {
       numPerPage = 12;
     }
     console.log('query:', query);
-
+    const total = await collection.countDocuments(query);
     const searchresult = await collection.find(query).limit(parseInt(numPerPage)).toArray();
-    response.send({ result: searchresult });
+    response.send({ limit:numPerPage,total: total, result: searchresult });
   } catch(e) {
     console.error(e);
     response.send({ error: "invalid search" });

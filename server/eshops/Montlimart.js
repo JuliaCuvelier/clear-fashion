@@ -33,7 +33,9 @@ const parse = async (data) => {
         .find('.product-miniature__thumb img')
         .attr('data-src');
 
-      return { name, price, link, image, brand };
+      const date = new Date().toDateString();
+
+      return { name, price, link, image, brand, date };
     })
     .get();
 

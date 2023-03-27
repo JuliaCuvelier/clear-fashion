@@ -30,8 +30,10 @@ const parse = data => {
       const image = "https:" + $(element)
       .find('img')[0].attribs['src']
 
+      const date = new Date().toDateString();
+
       const brand= 'Circle';
-      return {name, price,link,image, brand};
+      return {name, price,link,image, brand,date};
     })
     .get();
 };
