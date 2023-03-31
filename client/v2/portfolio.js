@@ -36,7 +36,7 @@ const SpanNbBrands = document.querySelector('#nbBrands');
 //filter
 const filterSelect = document.querySelector('#filter-select');
 const selectSort= document.querySelector('#sort-select');
-const selectFavorite = document.querySelector("#favorite-select");
+const SelectFavorite = document.querySelector('#select-favorite');
 
 //indicators :
 const spanNbProducts = document.querySelector('#nbProducts');
@@ -45,6 +45,12 @@ const spanP50 = document.querySelector('#p50');
 const spanP90 = document.querySelector('#p90');
 const spanP95 = document.querySelector('#p95');
 const spanLastReleasedDate = document.querySelector('#lastReleasedDate');
+
+if (localStorage.getItem("favorites")) {
+  setFavorite = new Set(JSON.parse(localStorage.getItem("favorites")));
+}
+
+
 /**
  * Set global value
  * @param {Array} result - products to display
@@ -70,6 +76,7 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
     const response = await fetch(url+ (brand !== "all" ? `&brand=${brand}` : ""));
     const body = await response.json();
 
+
     if (body.error) {
       console.error(body);
       return {currentProducts, currentPagination};
@@ -93,7 +100,9 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
       
     }
     
-  
+    if(filter==='By favorite'){
+      result = result.filter(product => setFavorite.has(product._id));
+    }
 
     const meta={currentPage:page,
     pageCount:Math.ceil(result.length/size),
@@ -144,17 +153,24 @@ const fetchProducts = async (page = 1, size = 12, brand="all", filter="no filter
  * Render list of products
  * @param  {Array} products
  */
+
+
 const renderProducts = products => {
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
+  div.classList.add('products-container');
   const template = products
     .map(product => {
+      const isFavorite = setFavorite.has(product._id);
       return `
-      <div class="product" id=${product.uuid}>
-        <span>${product.brand}</span>
-        <a target="_blank" href="${product.link}">${product.name}</a>  <! --to do 12 -->
-        <span>${product.price}</span>
-        <!-- <span>${product.date}</span> -->
+      <div class="product" id=${product._id}>
+        <span class="product-brand">${product.brand}</span>
+        <a target="_blank" href="${product.link}" class="product-name">${product.name}</a>
+        <img src="${product.image}" alt="${product.name}">
+        <span class="product-price">${product.price !== null ? product.price : '  '} €</span>
+        <button class="favorite-btn" data-id="${product._id}">
+          <i class="fa-heart ${isFavorite ? 'fas favorite' : 'far'}"></i>
+        </button>
       </div>
     `;
     })
@@ -165,6 +181,15 @@ const renderProducts = products => {
   sectionProducts.innerHTML = '<h2>Products</h2>';
   sectionProducts.appendChild(fragment);
 };
+
+function toggleFavorite(id) {
+  if (setFavorite.has(id)) {
+    setFavorite.delete(id);
+  } else {
+    setFavorite.add(id);
+  }
+  localStorage.setItem('favorites', JSON.stringify(Array.from(setFavorite)));
+}
 
 /**
  *  page selector
@@ -192,9 +217,9 @@ const renderIndicators = (pagination,products) => {
   spanNbNewProducts.innerHTML=nbNewProducts;
   SpanNbBrands.innerHTML=nbBrand;
 
-  spanP50.innerHTML = p50;
-  spanP90.innerHTML = p90;
-  spanP95.innerHTML = p95;
+  spanP50.innerHTML = p50+" €";
+  spanP90.innerHTML = p90+" €";
+  spanP95.innerHTML = p95+" €";
 
   spanLastReleasedDate.innerHTML = lastReleasedDate;
 };
@@ -274,4 +299,18 @@ selectSort.addEventListener('change', async (event) => {
 
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
+});
+
+sectionProducts.addEventListener('click', event => {
+  if (event.target.closest('.favorite-btn')) {
+    const button = event.target.closest('button');
+    const id = button.dataset.id;
+    toggleFavorite(id);
+
+    // Update the favorite icon
+    const heartIcon = button.querySelector('i');
+    heartIcon.classList.toggle('far');
+    heartIcon.classList.toggle('fas');
+    heartIcon.classList.toggle('favorite');
+  }
 });
